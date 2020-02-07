@@ -1,0 +1,94 @@
+<h3>Discrete Event Simulator Version 2</h3>
+<h4>Requirements</h4>
+<ul>
+<li>OOP Design consideration: continuation with switch-based event dispatching by event type</li>
+<li>Program documentation: adherance to <a href="https://www.comp.nus.edu.sg/~cs2030/javadoc/" target="_blank">CS2030 Javadoc</a></li>
+</ul>
+<h4>Problem Description</h4>
+<p>Let's make some changes to the queuing system in the previous lab. Specifically,</p>
+<ul>
+<li>there are now <tt>k ≥ 1</tt> servers, arranged in order from <tt>1</tt> to <tt>k</tt>; </li>
+<li>only one waiting customer is allowed per server; </li>
+<li>when a customer arrives at the shop: <ol>
+<li>he/she scans the servers from <tt>1</tt> to <tt>k</tt>, and approaches the first idle server to be served immediately; </li>
+<li>if there is no idle server, the customer scans the servers from <tt>1</tt> to <tt>k</tt>, and waits at the first busy server without any waiting customer; </li>
+<li>if every server is busy and already has a waiting customer, he/she leaves the shop. </li>
+</ol> </li>
+</ul>
+<p>As a result of this, you might realize that there is a better way to encapsulate the data and the behavior of the various entities in the program.  In which case, you may want to consider re-organize=ing your solution.</p>
+<p>Keep in mind that there are still five states of the system, namely <tt>ARRIVES</tt>,  <tt>SERVED</tt>, <tt>WAITS</tt> <tt>LEAVES</tt> and <tt>DONE</tt>.  and only one of three possible state transitions for each customer:</p>
+<ul>
+<li> <tt>ARRIVES</tt> → <tt>SERVED</tt> → <tt>DONE</tt> </li>
+<li> <tt>ARRIVES</tt> → <tt>WAITS</tt> → <tt>SERVED</tt> → <tt>DONE</tt> </li>
+<li> <tt>ARRIVES</tt> → <tt>LEAVES</tt> </li>
+</ul>
+<p>Statistics of the system that we need to keep track of are:</p>
+<ol>
+<li>the average waiting time for customers who have been served </li>
+<li>the number of customers served </li>
+<li>the number of customers who left without being served </li>
+</ol>
+<h4>The Task</h4>
+<p>Input now consists of the following (in order of presentation)</p>
+<ul>
+<li>number of servers; </li>
+<li>set of customer arrival times in chronological order </li>
+</ul>
+<p>Output comprises the individual discrete events, and also the statistics at the end of the simulation.</p>
+<p>Take note of the following assumptions:</p>
+<ul>
+<li>The maximum number of events is 100 <strong>at any one time</strong>; </li>
+<li>The format of the input is always correct; </li>
+<li>Output of a <tt>double</tt> value, say <tt>d</tt>, is to be formatted with <tt>String.format("%.3f", d)</tt>; <!--
+<li>Inconsistencies between sample output and actual output involving <tt>-0.000</tt> and <tt>0.000</tt> can be ignored. --> </li>
+</ul>
+<!--
+<p>This task is divided into several levels. Read through all the levels  to see how the different levels are related. <b>You may start from any level.</b>
+<p>In each level, you are to  -->
+<p>As this lab is a continuation form the previous one, this task will be treated as Level 6. Your programs for <tt>sim1</tt> to <tt>sim5</tt> in the previous lab has been made available to you. Just remember to</p>
+<ul>
+<li>define a <tt>Main</tt> class with the <tt>main</tt> method to handle input and output; </li>
+<li>check for output format correctness using the <tt>diff</tt> utility (see specific level for usage details).  Note that only <strong>one</strong> test case is provided for this; </li>
+<li>check for styling errors by invoking <tt>checkstyle</tt>. For example, to check styling for all java files
+<pre>$ checkstyle *.java
+</pre>
+</li>
+<li>save a copy of all source files into the appropriate level directory (see specific level for usage details). </li>
+</ul>
+<!-- <b> 
+<ul>
+<li>Deadline: Submit your work to CodeCrunch by Thursday, 15 September, 23:59:59. 
+</ul>
+</b> -->     
+<table style="width: 800px;" border="1" cellpadding="10">
+<tbody>
+<tr>
+<td>
+<h4>Level 6</h4>
+<p><big><strong> Discrete event simulation with <tt>k</tt> servers </strong></big></p>
+<p>You might want to first include the <tt>k</tt> servers, but only work with the first server, so that the output you get is consistent with the single server simulator.</p>
+<p>Thereafter, whenever an event is picked from the queue, process that event by consider all <tt>k</tt> servers and generate the new event.</p>
+<p>The following is a sample run of the program.  User input is <span style="text-decoration: underline;">underlined</span>.   <!-- Ensure that the last line of output is followed by a newline character. --></p>
+<table border="1">
+<tbody>
+<tr>
+<td><tt> <span style="text-decoration: underline;">1</span><br> <span style="text-decoration: underline;">0.500</span><br> <span style="text-decoration: underline;">0.600</span><br> <span style="text-decoration: underline;">0.700</span><br> <span style="text-decoration: underline;">1.500</span><br> <span style="text-decoration: underline;">1.600</span><br> <span style="text-decoration: underline;">1.700</span><br> 0.500 1 arrives<br> 0.500 1 served by 1<br> 0.600 2 arrives<br> 0.600 2 waits to be served by 1<br> 0.700 3 arrives<br> 0.700 3 leaves<br> 1.500 1 done serving by 1<br> 1.500 2 served by 1<br> 1.500 4 arrives<br> 1.500 4 waits to be served by 1<br> 1.600 5 arrives<br> 1.600 5 leaves<br> 1.700 6 arrives<br> 1.700 6 leaves<br> 2.500 2 done serving by 1<br> 2.500 4 served by 1<br> 3.500 4 done serving by 1<br> [0.633 3 3]<br> </tt></td>
+</tr>
+<tr>
+<td><tt> <span style="text-decoration: underline;">2</span><br> <span style="text-decoration: underline;">0.500</span><br> <span style="text-decoration: underline;">0.600</span><br> <span style="text-decoration: underline;">0.700</span><br> <span style="text-decoration: underline;">1.500</span><br> <span style="text-decoration: underline;">1.600</span><br> <span style="text-decoration: underline;">1.700</span><br> 0.500 1 arrives<br> 0.500 1 served by 1<br> 0.600 2 arrives<br> 0.600 2 served by 2<br> 0.700 3 arrives<br> 0.700 3 waits to be served by 1<br> 1.500 1 done serving by 1<br> 1.500 3 served by 1<br> 1.500 4 arrives<br> 1.500 4 waits to be served by 1<br> 1.600 2 done serving by 2<br> 1.600 5 arrives<br> 1.600 5 served by 2<br> 1.700 6 arrives<br> 1.700 6 waits to be served by 2<br> 2.500 3 done serving by 1<br> 2.500 4 served by 1<br> 2.600 5 done serving by 2<br> 2.600 6 served by 2<br> 3.500 4 done serving by 1<br> 3.600 6 done serving by 2<br> [0.450 6 0]<br> </tt></td>
+</tr>
+</tbody>
+</table>
+<p><!--
+<p>Click <a href="https://codecrunch.comp.nus.edu.sg/task_view.php?tid=4050" mce_href="task_view.php?tid=4050" target="_blank">here</a> to submit to CodeCrunch. --></p>
+<p>Check the format correctness of the output by typing the following Unix command</p>
+<pre>$ java Main &lt; test.in | diff - test6.out
+</pre>
+<p>Make a copy of your Java programs to the level directory by typing the Unix commands</p>
+<pre>$ mkdir sim6
+$ cp *.java sim6
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
